@@ -1,0 +1,1213 @@
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Isha — Finance &amp; Marketing Portfolio</title>
+<style>
+  /* =========================================================
+     DESIGN TOKENS — change these to re-theme the whole site
+     Dark navy/indigo palette, brass = finance, lavender = marketing
+     ========================================================= */
+  :root{
+    --bg:#F4F0FA;           /* deep navy-black page background */
+    --bg-2:#EDE6F7;         /* slightly lighter navy — cards/panels */
+    --surface:#E3DAF0;      /* input/slot surfaces */
+    --text:#29243A;         /* warm off-white — primary text */
+    --text-soft:#6F687D;    /* muted lavender-gray — secondary text */
+    --brass:#8A6FAF;        /* warm gold — finance accent */
+    --lavender:#9B7BC0;     /* periwinkle-blue — marketing accent */
+    --rule:rgba(86,67,112,.16); /* hairline dividers */
+    --glow:rgba(177,145,216,.20); /* ambient glow */
+
+    --serif:'Fraunces', 'Iowan Old Style', 'Palatino Linotype', serif;
+    --sans:'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    --mono:'IBM Plex Mono', 'SFMono-Regular', Consolas, monospace;
+  }
+
+  @import url('https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;0,9..144,600;0,9..144,700;1,9..144,500;1,9..144,600&family=Inter:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap');
+
+  *{box-sizing:border-box; margin:0; padding:0;}
+  html{scroll-behavior:smooth;}
+  body{
+    background:var(--bg);
+    color:var(--text);
+    font-family:var(--sans);
+    line-height:1.6;
+    -webkit-font-smoothing:antialiased;
+    position:relative;
+    overflow-x:hidden;
+  }
+  img{max-width:100%; display:block;}
+  a{color:inherit;}
+
+  .wrap{max-width:1080px; margin:0 auto; padding:0 32px; position:relative; z-index:2;}
+
+  /* -------- ambient floating orbs (subtle depth, reference-inspired) -------- */
+  .orb{
+    position:fixed; border-radius:50%; pointer-events:none; z-index:0;
+    filter:blur(60px); opacity:.5;
+    animation:float 14s ease-in-out infinite;
+  }
+  .orb-1{ width:340px; height:340px; top:-60px; right:-80px; background:var(--glow); animation-delay:0s; }
+  .orb-2{ width:260px; height:260px; top:60%; left:-100px; background:rgba(138,111,175,.10); animation-delay:-6s; }
+  @keyframes float{
+    0%,100%{ transform:translateY(0) translateX(0); }
+    50%{ transform:translateY(-30px) translateX(16px); }
+  }
+  @media (prefers-reduced-motion: reduce){ .orb{ animation:none; } }
+
+  /* -------- ledger index label (the signature element) -------- */
+  .index-label{
+    font-family:var(--mono);
+    font-size:13px;
+    letter-spacing:.08em;
+    color:var(--brass);
+    display:flex;
+    align-items:center;
+    gap:14px;
+    margin-bottom:28px;
+  }
+  .index-label .code{ white-space:nowrap; }
+  .index-label .line{ flex:1; height:1px; background:var(--rule); }
+
+  /* -------- nav -------- */
+  header.nav{
+    position:sticky; top:0; z-index:50;
+    background:rgba(244,240,250,.88);
+    backdrop-filter:blur(10px);
+    border-bottom:1px solid var(--rule);
+  }
+  .nav-inner{
+    display:flex; justify-content:space-between; align-items:center;
+    gap:28px;
+    padding:18px 32px;
+    max-width:1280px; margin:0 auto;
+  }
+  .nav-mark{
+    display:flex; align-items:center; gap:18px;
+    font-family:var(--serif); font-style:normal; font-weight:600; font-size:28px; letter-spacing:.01em;
+    color:var(--text); white-space:nowrap;
+  }
+  .nav-mark .nav-name{font-family:var(--serif); color:var(--text);}
+  .nav-mark .nav-divider{
+    display:block; flex:0 0 2px; width:2px; height:34px;
+    background:var(--lavender); opacity:1; border-radius:2px;
+  }
+  .nav-mark .nav-role{
+    font-family:var(--mono); font-size:12px; font-weight:400; letter-spacing:.14em;
+    color:var(--brass); text-transform:uppercase;
+  }
+  .nav-links{display:flex; gap:19px; list-style:none; font-family:var(--mono); font-size:11px; letter-spacing:.035em; flex-wrap:nowrap;}
+  .nav-links a{text-decoration:none; color:var(--text-soft); transition:color .2s;}
+  .nav-links a:hover{color:var(--lavender);}
+  @media (max-width:1100px){
+    .nav-inner{gap:18px; padding-left:22px; padding-right:22px;}
+    .nav-mark{font-size:22px; gap:11px;}
+    .nav-mark .nav-divider{height:28px;}
+    .nav-mark .nav-role{font-size:9px; letter-spacing:.08em;}
+    .nav-links{gap:12px; font-size:10px;}
+  }
+  @media (max-width:640px){ .nav-links{display:none;} .nav-mark .nav-role{display:none;} }
+
+  /* -------- hero -------- */
+  .hero{
+    padding:88px 0 60px;
+    border-bottom:1px solid var(--rule);
+    position:relative;
+  }
+  /* -------- hero: text left, large photo on the side -------- */
+  .hero-grid{
+    display:grid; grid-template-columns:1.15fr .85fr; gap:48px; align-items:center;
+  }
+  @media (max-width:800px){ .hero-grid{ grid-template-columns:1fr; } }
+  .hero-photo{
+    aspect-ratio:4/5; width:100%; max-width:340px; border-radius:10px;
+    border:1px solid var(--brass);
+    background:var(--surface); overflow:hidden; position:relative;
+    justify-self:end;
+  }
+  @media (max-width:800px){ .hero-photo{ justify-self:start; max-width:280px; } }
+  .hero-photo img{ width:100%; height:100%; object-fit:cover; position:absolute; inset:0; }
+  .hero-photo .placeholder-text{
+    display:none;
+    font-family:var(--mono); font-size:11px; color:var(--brass); text-align:center;
+    padding:10px; line-height:1.5; position:relative; z-index:2;
+  }
+  .hero-name{ font-family:var(--serif); font-weight:600; font-size:44px; color:var(--text); margin-bottom:14px; }
+
+  .hero-eyebrow{
+    font-family:var(--mono); font-size:13px; letter-spacing:.1em;
+    color:var(--lavender); text-transform:uppercase; margin-bottom:18px;
+  }
+  .hero h1{
+    font-family:var(--serif);
+    font-weight:600;
+    font-size:clamp(36px, 5.4vw, 64px);
+    line-height:1.05;
+    letter-spacing:-.01em;
+    color:var(--text);
+  }
+  .hero h1 em{ font-style:italic; color:var(--lavender); }
+  .hero-actions{ margin-top:36px; display:flex; gap:16px; flex-wrap:wrap; }
+  .btn{
+    font-family:var(--mono); font-size:13px; letter-spacing:.04em;
+    padding:13px 24px; border:1px solid var(--rule); border-radius:30px;
+    text-decoration:none; display:inline-block; transition:all .2s;
+  }
+  .btn-solid{ background:var(--lavender); color:#F8F5FC; border-color:var(--lavender); font-weight:500; }
+  .btn-solid:hover{ background:#AA8BCF; }
+  .btn-ghost{ color:var(--text); }
+  .btn-ghost:hover{ border-color:var(--lavender); color:var(--lavender); }
+
+  /* -------- section shell -------- */
+  section{ padding:96px 0; border-bottom:1px solid var(--rule); position:relative; }
+  section.tone-a{ background:var(--bg); }
+  section.tone-b{ background:var(--bg-2); }
+  .section-head{ display:flex; justify-content:space-between; align-items:flex-end; margin-bottom:44px; flex-wrap:wrap; gap:16px;}
+  .section-head h2{
+    font-family:var(--serif); font-weight:600;
+    font-size:clamp(28px, 4vw, 40px);
+    color:var(--text);
+  }
+  .section-head h2 em{ font-style:italic; font-weight:500; color:var(--lavender); }
+  .section-tag{ font-family:var(--mono); font-size:13px; color:var(--text-soft); }
+
+  /* -------- about -------- */
+  .about-grid{ display:grid; grid-template-columns:1.1fr .9fr; gap:56px; align-items:start; }
+  @media (max-width:800px){ .about-grid{ grid-template-columns:1fr; } }
+  .about-text p{ margin-bottom:16px; color:var(--text-soft); font-size:17px; max-width:56ch;}
+  .about-text strong{ color:var(--text); }
+
+  .photo-slot{
+    aspect-ratio:4/5; border:1px solid rgba(104,80,145,.22); border-radius:6px;
+    display:flex; align-items:center; justify-content:center;
+    background:var(--surface); position:relative; overflow:hidden;
+  }
+  .photo-slot img{ width:100%; height:100%; object-fit:cover; position:absolute; inset:0; }
+  .photo-slot .placeholder-text{
+    display:none;
+    font-family:var(--mono); font-size:12px; color:var(--brass);
+    text-align:center; padding:20px; line-height:1.7; letter-spacing:.02em;
+  }
+
+  /* -------- education / experience ledger rows -------- */
+  .ledger-row{
+    display:grid; grid-template-columns:110px 1fr auto; gap:24px;
+    padding:22px 0; border-top:1px solid var(--rule); align-items:baseline;
+  }
+  .ledger-row:last-child{ border-bottom:1px solid var(--rule); }
+  .ledger-year{ font-family:var(--mono); font-size:13px; color:var(--brass); }
+  .ledger-main h3{ font-family:var(--serif); font-weight:600; font-size:20px; margin-bottom:4px; color:var(--text);}
+  .ledger-main p{ color:var(--text-soft); font-size:15px; }
+  .ledger-note{ font-family:var(--mono); font-size:12px; color:var(--text-soft); text-align:right; white-space:nowrap;}
+  @media (max-width:640px){
+    .ledger-row{ grid-template-columns:1fr; gap:6px; }
+    .ledger-note{ text-align:left; }
+  }
+
+  /* -------- skills — meter bars -------- */
+  .skills-cols{ display:grid; grid-template-columns:1fr 1fr; gap:56px; }
+  @media (max-width:700px){ .skills-cols{ grid-template-columns:1fr; } }
+  .skills-cols h3{
+    font-family:var(--mono); font-size:13px; letter-spacing:.08em; text-transform:uppercase;
+    color:var(--lavender); margin-bottom:22px;
+  }
+  .meter{ margin-bottom:18px; }
+  .meter-label{ display:flex; justify-content:space-between; font-size:14px; margin-bottom:7px; color:var(--text);}
+  .meter-label span:last-child{ font-family:var(--mono); color:var(--text-soft); font-size:12px; }
+  .meter-track{ height:6px; background:var(--surface); border-radius:3px; overflow:hidden; }
+  .meter-fill{ height:100%; background:var(--brass); border-radius:3px; }
+  .skills-right .meter-fill{ background:var(--lavender); }
+
+  .skill-chip-row{ display:flex; flex-wrap:wrap; gap:10px; }
+  .skill-chip{
+    font-family:var(--sans); font-size:14px; color:var(--text);
+    border:1px solid var(--rule); background:var(--surface);
+    padding:9px 16px; border-radius:20px;
+  }
+  .skills-left .skill-chip{ border-color:rgba(138,111,175,.35); }
+  .skills-right .skill-chip{ border-color:rgba(155,123,192,.35); }
+
+  /* -------- projects/research — case cards -------- */
+  .case-grid{ display:grid; grid-template-columns:1fr 1fr; gap:1px; background:var(--rule); }
+  @media (max-width:760px){ .case-grid{ grid-template-columns:1fr; } }
+  .case-card{ background:var(--bg); padding:34px; }
+  .case-card img{ width:100%; height:170px; object-fit:cover; border-radius:6px; margin-bottom:16px; display:block; }
+  .case-tag{ font-family:var(--mono); font-size:12px; color:var(--brass); letter-spacing:.05em; margin-bottom:14px; display:block;}
+  .case-card h3{ font-family:var(--serif); font-weight:600; font-size:22px; margin-bottom:12px; color:var(--text);}
+  .case-card p{ color:var(--text-soft); font-size:15px; margin-bottom:16px; }
+  .case-meta{ display:flex; gap:14px; flex-wrap:wrap; }
+  .chip{ font-family:var(--mono); font-size:11px; border:1px solid var(--rule); padding:4px 10px; border-radius:20px; color:var(--text-soft); }
+
+
+  /* -------- dashboards — full-width visual work -------- */
+  .dashboard-grid{
+    display:grid;
+    grid-template-columns:repeat(2,minmax(0,1fr));
+    gap:16px;
+  }
+  .dashboard-card{
+    background:var(--bg);
+    border:1px solid var(--rule);
+    border-radius:10px;
+    padding:14px;
+    overflow:hidden;
+  }
+  .dashboard-card .dashboard-image{
+    width:100%;
+    height:145px;
+    object-fit:cover;
+    object-position:center;
+    background:#DCD2E9;
+    border:1px solid var(--rule);
+    border-radius:7px;
+    margin-bottom:12px;
+  }
+  .dashboard-card h3{
+    font-family:var(--serif);
+    font-weight:600;
+    font-size:18px;
+    margin-bottom:7px;
+    color:var(--text);
+  }
+  .dashboard-card p{
+    color:var(--text-soft);
+    font-size:12px;
+    line-height:1.45;
+    margin-bottom:10px;
+    max-width:80ch;
+  }
+  .dashboard-card .tag-row{margin-bottom:8px;}
+  @media (max-width:760px){
+    .dashboard-grid{grid-template-columns:1fr;}
+  }
+  @media (max-width:640px){
+    .dashboard-card{padding:12px;}
+    .dashboard-card .dashboard-image{height:170px;}
+    .dashboard-card h3{font-size:19px;}
+  }
+
+  /* -------- certificates gallery -------- */
+  .cert-grid{ display:grid; grid-template-columns:repeat(3, 1fr); gap:20px; }
+  @media (max-width:760px){ .cert-grid{ grid-template-columns:1fr 1fr; } }
+  @media (max-width:480px){ .cert-grid{ grid-template-columns:1fr; } }
+  .cert-slot{
+    aspect-ratio:4/3; border:1px solid rgba(104,80,145,.22); border-radius:6px;
+    background:#F7F3F9; position:relative; overflow:hidden;
+    display:flex; flex-direction:column; align-items:center; justify-content:center; text-align:center; padding:16px;
+  }
+  .cert-slot img{ width:100%; height:100%; object-fit:contain; position:absolute; inset:0; padding:8px; box-sizing:border-box; background:#F7F3F9; }
+  .cert-slot .placeholder-text{ display:none; font-family:var(--mono); font-size:11px; color:var(--brass); line-height:1.7; position:relative; z-index:2;}
+  .cert-caption{ font-family:var(--mono); font-size:12px; color:var(--text-soft); margin-top:10px; text-align:center;}
+
+  /* -------- organizing / leadership stat highlight -------- */
+  .stat-row{ display:flex; gap:56px; flex-wrap:wrap; margin-bottom:48px; }
+  .stat-num{ font-family:var(--serif); font-style:italic; font-size:clamp(40px,6vw,64px); color:var(--lavender); line-height:1; }
+  .stat-label{ font-family:var(--mono); font-size:12px; color:var(--text-soft); margin-top:8px; letter-spacing:.03em; }
+
+  /* -------- contact -------- */
+  .contact{ border-bottom:none; }
+  .contact-inner{ display:flex; justify-content:space-between; align-items:flex-end; flex-wrap:wrap; gap:32px; }
+  .contact h2{ font-family:var(--serif); font-weight:600; font-size:clamp(30px,5vw,52px); max-width:14ch; color:var(--text);}
+  .contact-links{ display:flex; flex-direction:column; gap:10px; font-family:var(--mono); font-size:15px; }
+  .contact-links a{ text-decoration:none; border-bottom:1px solid var(--rule); padding-bottom:2px; transition:border-color .2s, color .2s; color:var(--text);}
+  .contact-links a:hover{ border-color:var(--lavender); color:var(--lavender); }
+
+  footer{ padding:28px 0 40px; font-family:var(--mono); font-size:12px; color:var(--text-soft); display:flex; justify-content:space-between; flex-wrap:wrap; gap:8px; position:relative; z-index:2;}
+
+/* -------- compact project cards -------- */
+.project-links{display:flex;gap:10px;flex-wrap:wrap;margin-top:18px;}
+.project-links .project-link{display:inline-flex;align-items:center;justify-content:center;border:1px solid var(--rule);padding:9px 14px;border-radius:6px;text-decoration:none;color:var(--text);font-family:var(--mono);font-size:11px;letter-spacing:.03em;transition:.2s ease;}
+.project-links .project-link:hover{border-color:var(--brass);color:var(--brass);transform:translateY(-1px);}
+.project-links .project-link.primary{background:var(--brass);border-color:var(--brass);color:#2B2138;}
+.project-links .project-link.primary:hover{opacity:.9;color:#2B2138;}
+.project-type-links{display:flex;gap:10px;flex-wrap:wrap;margin-top:8px;}
+.project-type-links a{font-family:var(--mono);font-size:11px;text-decoration:none;color:var(--text-soft);border-bottom:1px solid transparent;padding-bottom:3px;}
+.project-type-links a:hover{color:var(--brass);border-color:var(--brass);}
+#projects .case-grid{grid-template-columns:repeat(2,1fr);gap:16px;background:transparent;}
+#projects .case-card{border:1px solid var(--rule);border-radius:10px;padding:22px;min-height:235px;display:flex;flex-direction:column;}
+#projects .case-card p{font-size:13px;line-height:1.55;margin-bottom:12px;}
+#projects .case-card h3{font-size:19px;margin-bottom:8px;}
+#projects .case-tag{font-size:10px;margin-bottom:9px;}
+#projects .case-meta{margin-top:auto;}
+#projects .project-placeholder{border-style:dashed;opacity:.72;justify-content:center;min-height:235px;}
+#projects .project-placeholder h3{font-size:18px;}
+
+@media(max-width:760px){#projects .case-grid{grid-template-columns:1fr;}}
+.project-modal{display:none;position:fixed;inset:0;background:rgba(54,43,69,.45);z-index:9999;align-items:center;justify-content:center;padding:20px;}
+.project-modal.open{display:flex;}
+.project-modal-box{width:min(720px,100%);max-height:85vh;overflow:auto;background:var(--bg);border:1px solid var(--rule);border-radius:12px;padding:30px;position:relative;box-shadow:0 20px 70px rgba(70,55,88,.18);}
+.project-modal-close{position:absolute;right:18px;top:14px;border:0;background:none;color:var(--text-soft);font-size:25px;cursor:pointer;}
+.project-modal-box h3{font-family:var(--serif);font-size:28px;margin:5px 35px 14px 0;}
+.project-modal-box p{color:var(--text-soft);line-height:1.7;}
+.project-modal-box .modal-meta{display:flex;gap:8px;flex-wrap:wrap;margin:18px 0;}
+</style>
+<style>.case-card{padding:24px}.case-card h3{font-size:19px;line-height:1.25}.case-card p{font-size:13px;line-height:1.5;margin-bottom:13px}.case-meta{gap:7px}.project-links{margin-top:14px;display:flex;gap:8px;flex-wrap:wrap}.project-link{font-family:var(--mono);font-size:11px;text-decoration:none;border:1px solid var(--rule);padding:7px 11px;border-radius:5px;color:var(--text);display:inline-block}.project-link.primary{border-color:var(--brass);color:var(--brass)}</style><style id="reference-hero-override">
+/* Redesigned first screen based on the supplied reference screenshot */
+header.nav{background:rgba(244,240,250,.82)}
+.nav-inner{max-width:1280px;padding:20px 32px}.nav-mark{font-size:30px}.nav-links.hero-nav{gap:34px;margin-left:auto;margin-right:34px;font-size:11px;letter-spacing:.05em}.nav-links.hero-nav a{color:var(--text)}.nav-resume{text-decoration:none;display:inline-flex;align-items:center;justify-content:center;min-width:122px;padding:12px 18px;border:1px solid var(--brass);border-radius:10px;font-family:var(--mono);font-size:12px;letter-spacing:.06em;color:var(--brass)}
+.hero{min-height:650px;padding:64px 0 74px;overflow:hidden;background:radial-gradient(circle at 79% 40%,rgba(196,170,230,.34),transparent 31%),radial-gradient(circle at 24% 47%,rgba(224,215,238,.72),transparent 34%),var(--bg)}.hero::after{content:"";position:absolute;width:165px;height:165px;border:1px solid rgba(255,255,255,.42);border-left-color:transparent;border-bottom-color:transparent;border-radius:50%;right:8%;top:46%;pointer-events:none}.hero .wrap{max-width:1280px}.hero-grid{grid-template-columns:1.2fr .8fr;gap:74px;align-items:center;min-height:490px}.hero-text{position:relative;padding-left:70px}.hero-rail{position:absolute;left:0;top:82px;width:1px;height:365px;background:rgba(86,67,112,.18)}.hero-rail::after{content:"";position:absolute;top:54px;left:-2px;width:4px;height:35px;border-radius:5px;background:#65479c}.hero h1{font-size:clamp(56px,6.2vw,82px);line-height:.98;letter-spacing:-.03em;margin:0}.hero h1 em{font-style:normal;color:#6b4b9c}.hero-subtitle{margin-top:24px;font-family:var(--serif);font-size:clamp(20px,2vw,26px);line-height:1.35;color:var(--text)}.hero-subtitle span{color:#76589e}.hero-actions{margin-top:32px;gap:22px}.btn{border-radius:9px;padding:15px 24px;font-size:12px;font-weight:600}.btn-solid{background:#65479c;border-color:#65479c}.btn-ghost{border-color:#76589e;color:#6d5a86;background:rgba(255,255,255,.22)}.hero-photo{max-width:390px;aspect-ratio:4/5;border-radius:24px;border-color:#7d5aa5;box-shadow:0 24px 55px rgba(78,54,105,.16)}
+@media(max-width:900px){.nav-links.hero-nav{gap:15px;margin-right:14px}.hero-grid{gap:40px}.hero-text{padding-left:44px}}@media(max-width:760px){.nav-resume{display:none}.hero{padding:44px 0 54px}.hero-grid{grid-template-columns:1fr}.hero-photo{justify-self:start;max-width:320px}.hero-rail{height:330px}}
+</style>
+<style id="creative-education-internship-redesign">
+/* Creative mixed-card treatment inspired by the reference portfolio: serif display type + playful pastel blocks */
+#education .section-head, #internships .section-head{margin-bottom:28px}
+#education .section-head h2, #internships .section-head h2{font-size:clamp(42px,5vw,58px);letter-spacing:-.04em}
+#education .section-tag, #internships .section-tag{padding:8px 14px;border:1px solid var(--rule);border-radius:999px;background:rgba(255,255,255,.45);font-family:var(--mono)}
+#education .ledger-row,#internships .ledger-row{position:relative;display:grid;grid-template-columns:120px 1fr auto;gap:22px;margin:0 0 18px;padding:28px 30px;border:1px solid rgba(86,67,112,.14);border-radius:18px;background:rgba(255,255,255,.62);box-shadow:0 10px 28px rgba(78,54,105,.06);overflow:hidden;transition:transform .25s ease,box-shadow .25s ease}
+#education .ledger-row:hover,#internships .ledger-row:hover{transform:translateY(-4px);box-shadow:0 18px 38px rgba(78,54,105,.12)}
+#education .ledger-row::before,#internships .ledger-row::before{content:"";position:absolute;left:0;top:0;width:9px;height:100%;border-radius:18px 0 0 18px;background:var(--lavender)}
+#education .ledger-row:nth-of-type(4n+1)::before,#internships .ledger-row:nth-of-type(4n+1)::before{background:#7A5FA8}
+#education .ledger-row:nth-of-type(4n+2)::before,#internships .ledger-row:nth-of-type(4n+2)::before{background:#B28BCB}
+#education .ledger-row:nth-of-type(4n+3)::before,#internships .ledger-row:nth-of-type(4n+3)::before{background:#C59A67}
+#education .ledger-row:nth-of-type(4n)::before,#internships .ledger-row:nth-of-type(4n)::before{background:#789B94}
+#education .ledger-row:nth-of-type(odd),#internships .ledger-row:nth-of-type(even){background:linear-gradient(120deg,rgba(255,255,255,.78),rgba(234,226,245,.9))}
+#education .ledger-row:nth-of-type(even),#internships .ledger-row:nth-of-type(odd){background:linear-gradient(120deg,rgba(255,255,255,.72),rgba(246,239,228,.86))}
+#education .ledger-year,#internships .ledger-year{align-self:start;padding:7px 11px;border-radius:8px;background:rgba(122,95,168,.11);font-size:11px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:#65479c}
+#education .ledger-main h3,#internships .ledger-main h3{font-family:var(--serif);font-size:clamp(24px,2.5vw,31px);line-height:1.05;margin-bottom:9px;letter-spacing:-.02em}
+#education .ledger-main h3::after{content:" ✦";font-family:var(--mono);font-size:13px;color:var(--lavender);vertical-align:middle}
+#education .ledger-main p,#internships .ledger-main p{font-size:14px;max-width:62ch;line-height:1.55}
+#education .ledger-note,#internships .ledger-note{align-self:center;padding:10px 14px;border-radius:12px;background:#29243A;color:#F7F3FB;font-family:var(--mono);font-size:12px;letter-spacing:.04em;box-shadow:inset 0 0 0 1px rgba(255,255,255,.08)}
+#education .ledger-row:nth-of-type(2n) .ledger-note,#internships .ledger-row:nth-of-type(2n) .ledger-note{background:#6B4B9C}
+@media(max-width:640px){#education .ledger-row,#internships .ledger-row{grid-template-columns:1fr;padding:22px 22px 22px 26px;gap:12px}#education .ledger-note,#internships .ledger-note{justify-self:start}#education .section-head h2,#internships .section-head h2{font-size:40px}}
+</style>
+<style id="screenshot-inspired-cards">
+/* Screenshot-inspired education & experience layout */
+#education,#internships{padding:0 0 88px;border-bottom:0;background:#e9ddd2;position:relative;overflow:hidden;}
+#education::before,#internships::before{content:"";position:absolute;inset:0;background-image:radial-gradient(rgba(91,63,61,.18) .8px,transparent .9px);background-size:8px 8px;opacity:.45;pointer-events:none;}
+#education .wrap,#internships .wrap{position:relative;z-index:1;max-width:1540px;padding:0 72px;}
+.sshot-hero{display:grid;grid-template-columns:1.08fr .92fr;gap:80px;align-items:end;padding:34px 28px 48px;}
+.sshot-eyebrow{font-family:var(--mono);font-size:12px;letter-spacing:.16em;text-transform:uppercase;color:#b97187;font-weight:600;margin-bottom:34px;}
+.sshot-title{font-family:var(--serif);font-size:clamp(62px,7vw,116px);line-height:.84;letter-spacing:-.055em;color:#2d2427;font-weight:500;max-width:780px;}
+.sshot-title .accent{display:block;color:#bd7289;font-style:italic;}
+.sshot-copy{font-size:19px;line-height:1.65;color:#625b60;max-width:620px;padding-bottom:8px;}
+.sshot-copy strong{color:#322c30;}
+.sshot-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:18px;padding:0 28px;}
+.sshot-card{min-height:438px;padding:72px 56px 48px;position:relative;background:rgba(251,247,242,.86);border:1px solid rgba(120,91,83,.12);box-shadow:0 10px 25px rgba(93,67,59,.04);overflow:hidden;display:flex;flex-direction:column;}
+.sshot-card:nth-child(4n+1),#internships .sshot-card:nth-child(4n+1){background:#302529;color:#f5efea;}
+.sshot-card:nth-child(4n+3),#internships .sshot-card:nth-child(4n+3){background:#6b5055;color:#f8f1eb;}
+.sshot-card::before{content:"";position:absolute;inset:0;background-image:none;background-size:8px 8px;opacity:.55;pointer-events:none;}
+.sshot-card.dark::before{background-image:none;}
+.sshot-num,.sshot-date,.sshot-card h3,.sshot-org,.sshot-bullets,.sshot-badge,.sshot-link{position:relative;z-index:1;}
+.sshot-num{font-family:var(--serif);font-size:56px;line-height:1;color:#d89bae;font-weight:600;margin-bottom:16px;}
+.sshot-date{font-family:var(--mono);font-size:12px;letter-spacing:.12em;color:#b97187;text-transform:uppercase;font-weight:600;margin-bottom:34px;}
+.sshot-card h3{font-family:var(--serif);font-size:34px;line-height:1.05;font-weight:600;color:#2f292b;margin:0 0 8px;letter-spacing:-.02em;}
+.sshot-card.dark h3{color:#f7f1ec;}
+.sshot-org{font-size:18px;color:#b97187;font-weight:500;margin-bottom:30px;}
+.sshot-card.dark .sshot-org{color:#d59aa9;}
+.sshot-bullets{list-style:none;margin:0;padding:0;display:grid;gap:8px;font-size:16px;line-height:1.5;color:#5e585b;}
+.sshot-card.dark .sshot-bullets{color:#d8cdca;}
+.sshot-bullets li{padding-left:18px;position:relative;}.sshot-bullets li::before{content:"•";position:absolute;left:0;color:#c47d92;}
+.sshot-badge{margin-top:auto;align-self:flex-start;font-family:var(--mono);font-size:12px;letter-spacing:.08em;color:#b97187;border:1px solid rgba(185,113,135,.55);border-radius:999px;padding:10px 16px;text-transform:uppercase;}
+.sshot-card.dark .sshot-badge{color:#e5a7b7;border-color:rgba(229,167,183,.55);}
+.sshot-link{margin-top:16px;align-self:flex-start;display:inline-flex;align-items:center;gap:8px;font-family:var(--mono);font-size:12px;text-decoration:none;color:#b97187;border:1px solid rgba(185,113,135,.55);border-radius:999px;padding:10px 16px;transition:.2s;}
+.sshot-card.dark .sshot-link{color:#e5a7b7;border-color:rgba(229,167,183,.55);}.sshot-link:hover{transform:translateY(-2px);background:rgba(185,113,135,.08);}
+.sshot-arrow{position:absolute;right:38px;bottom:28px;font-size:30px;color:#c88497;z-index:1;}
+@media(max-width:900px){#education .wrap,#internships .wrap{padding:0 24px}.sshot-hero{grid-template-columns:1fr;gap:28px;padding:34px 0}.sshot-grid{padding:0;}.sshot-title{font-size:72px}.sshot-card{padding:48px 34px;}}
+@media(max-width:680px){.sshot-grid{grid-template-columns:1fr}.sshot-card{min-height:390px}.sshot-title{font-size:58px}.sshot-copy{font-size:16px}.sshot-card h3{font-size:30px}}
+</style>
+<style id="lavender-alternating-override">
+/* Isha version: lavender theme + alternating full-page sections */
+:root{--lavender:#9B7BC0;--brass:#7D5AA5;--bg:#F7F3FB;--bg-2:#EDE5F7;--surface:#E4D7F0;--text:#2D2436;--text-soft:#6F6379;--rule:rgba(99,76,126,.16)}
+section.tone-a{background:#F8F5FB!important;}
+section.tone-b{background:#EAE1F4!important;}
+/* Alternate the large portfolio pages after the hero: light lavender, deeper lavender, light lavender */
+#about{background:#F8F5FB!important;}
+#education{background:#E4D6F0!important;}
+#internships{background:#F7F2FA!important;}
+#skills{background:#E9DDF3!important;}
+#projects{background:#F8F5FB!important;}
+#dashboards{background:#E8DCF2!important;}
+#certificates{background:#F8F5FB!important;}
+#leadership{background:#E7DBF1!important;}
+#contact{background:#F8F5FB!important;}
+/* Screenshot-inspired creative cards, recoloured from pink/beige to lavender */
+#education,#internships{border-bottom:0;}
+#education::before,#internships::before{background-image:radial-gradient(rgba(100,76,128,.18) .8px,transparent .9px)!important;}
+.sshot-eyebrow{color:#8060A5!important;}
+.sshot-title{color:#2D2436!important;}
+.sshot-title .accent{color:#9B7BC0!important;}
+.sshot-copy{color:#62586D!important;}.sshot-copy strong{color:#322A3A!important;}
+.sshot-card{background:rgba(251,248,253,.90)!important;border-color:rgba(112,85,146,.15)!important;}
+.sshot-card:nth-child(4n+1),#internships .sshot-card:nth-child(4n+1){background:#352B43!important;color:#FAF7FD!important;}
+.sshot-card:nth-child(4n+3),#internships .sshot-card:nth-child(4n+3){background:#73558F!important;color:#FBF8FD!important;}
+.sshot-card::before{background-image:none!important;}
+.sshot-card.dark::before{background-image:none!important;}
+.sshot-num{color:#B79AD0!important;}
+.sshot-date{color:#8565AA!important;}
+.sshot-card h3{color:#30273A!important;}.sshot-card.dark h3{color:#FBF8FD!important;}
+.sshot-org{color:#8565AA!important;}.sshot-card.dark .sshot-org{color:#CBB8DE!important;}
+.sshot-bullets{color:#5F566A!important;}.sshot-card.dark .sshot-bullets{color:#E5DCEA!important;}
+.sshot-bullets li::before{color:#9B7BC0!important;}
+.sshot-badge,.sshot-link{color:#8060A5!important;border-color:rgba(128,96,165,.55)!important;}
+.sshot-card.dark .sshot-badge,.sshot-card.dark .sshot-link{color:#D7C8E5!important;border-color:rgba(215,200,229,.58)!important;}
+.sshot-link:hover{background:rgba(155,123,192,.10)!important;}
+.sshot-arrow{color:#AD91C7!important;}
+/* keep every section visually different, but within one lavender family */
+</style>
+<style id="final-lavender-redesign">
+:root{--ink:#29243A;--lavender:#8f70c4;--lavender-dark:#4b376b;--lavender-mid:#b9a1df;--lavender-soft:#eee8f8;--lavender-pale:#f8f5fc;--lilac:#d9ccec;--cream:#fbf8fe;}
+/* remove dotted texture completely */
+body,section,section.tone-a,section.tone-b,#education,#internships,#projects,#skills,#dashboards,#certificates,#organizing,#contact{background-image:none!important;}
+#education::before,#internships::before,#projects::before,#skills::before,#dashboards::before,#certificates::before,#organizing::before,#contact::before{background-image:none!important;content:none!important;}
+/* alternate full-page lavender tones */
+#about{background:var(--lavender-pale)!important}#education{background:#ddd2ee!important}#internships{background:var(--cream)!important}#projects{background:#cbb9e4!important}#skills{background:var(--lavender-pale)!important}#dashboards{background:#bda5dc!important}#certificates{background:#f4effa!important}#organizing{background:#d7c9e9!important}#contact{background:#51406e!important;color:#fff!important}
+/* stylish headings */
+section .section-head h2, .sshot-title, .contact h2{font-family:var(--serif)!important;letter-spacing:-.055em!important;line-height:.95!important;}
+section .section-head h2{font-size:clamp(48px,7vw,82px)!important;position:relative;display:inline-block;color:var(--ink)!important;}
+section .section-head h2::after{content:"✦";font-family:var(--sans);font-size:.32em;vertical-align:top;margin-left:12px;color:var(--lavender);}
+section .section-head h2 em{font-style:italic!important;color:var(--lavender)!important}.sshot-title{font-size:clamp(56px,8vw,104px)!important}.sshot-title .accent{color:var(--lavender-dark)!important;font-style:italic}.section-tag{border-color:rgba(75,55,107,.2)!important;background:rgba(255,255,255,.52)!important;color:var(--lavender-dark)!important;border-radius:999px!important;padding:10px 16px!important}
+.sshot-eyebrow,.case-tag,.index-label .code{color:var(--lavender-dark)!important;font-weight:700!important;letter-spacing:.14em!important}.sshot-hero{padding-top:72px!important}.sshot-copy{font-size:17px!important}.education-two{grid-template-columns:1fr 1fr!important}.sshot-card{border:1px solid rgba(75,55,107,.16)!important;box-shadow:0 18px 45px rgba(75,55,107,.09)!important}.sshot-card.dark{background:var(--lavender-dark)!important}.sshot-card.dark .sshot-num,.sshot-card.dark .sshot-date,.sshot-card.dark .sshot-org,.sshot-card.dark .sshot-badge{color:#e4d8f4!important}.sshot-card:not(.dark){background:#fbf9fe!important}.sshot-num{color:var(--lavender)!important}.sshot-card:not(.dark) .sshot-date,.sshot-card:not(.dark) .sshot-org{color:#765d9b!important}.sshot-card:not(.dark) h3{color:var(--ink)!important}.sshot-badge{border-color:currentColor!important}
+/* project/skill/card colours */
+.case-card,.dashboard-card{border-radius:18px!important;border-color:rgba(75,55,107,.14)!important;box-shadow:0 12px 30px rgba(75,55,107,.08)!important}.case-card{background:#fbf9fe!important}.dashboard-card{background:rgba(255,255,255,.78)!important}.skill-chip{background:rgba(255,255,255,.62)!important;border-color:rgba(75,55,107,.18)!important}.meter-fill{background:linear-gradient(90deg,var(--lavender-dark),var(--lavender))!important}
+/* certificate click + polish */
+.cert-slot{border:0!important;border-radius:16px!important;background:#fff!important;box-shadow:0 12px 28px rgba(75,55,107,.12)!important;cursor:pointer;transition:transform .3s ease,box-shadow .3s ease;overflow:hidden}.cert-slot::after{content:"Click to view ↗";position:absolute;right:10px;bottom:10px;padding:7px 10px;border-radius:999px;background:rgba(75,55,107,.88);color:#fff;font-family:var(--mono);font-size:10px;opacity:0;transform:translateY(6px);transition:.25s}.cert-slot:hover{transform:translateY(-6px);box-shadow:0 20px 42px rgba(75,55,107,.2)!important}.cert-slot:hover::after{opacity:1;transform:none}.cert-caption{color:#66557e!important}
+.cert-lightbox{position:fixed;inset:0;background:rgba(36,27,51,.78);backdrop-filter:blur(10px);z-index:10000;display:none;align-items:center;justify-content:center;padding:28px}.cert-lightbox.open{display:flex}.cert-lightbox-box{position:relative;max-width:min(1000px,95vw);max-height:90vh;background:#fff;border-radius:18px;padding:14px;box-shadow:0 30px 80px rgba(0,0,0,.35)}.cert-lightbox img{display:block;max-width:100%;max-height:calc(90vh - 28px);object-fit:contain;border-radius:10px}.cert-lightbox button{position:absolute;top:-14px;right:-14px;width:40px;height:40px;border:0;border-radius:50%;background:var(--lavender-dark);color:#fff;font-size:22px;cursor:pointer}
+/* scroll reveal */
+.reveal,.reveal-card,.case-card,.dashboard-card,.cert-grid>div,.meter,.stat-row>div{opacity:0;transform:translateY(36px);transition:opacity .75s cubic-bezier(.2,.7,.2,1),transform .75s cubic-bezier(.2,.7,.2,1)}.reveal.visible,.reveal-card.visible,.case-card.visible,.dashboard-card.visible,.cert-grid>div.visible,.meter.visible,.stat-row>div.visible{opacity:1;transform:none}.case-card:nth-child(2),.dashboard-card:nth-child(2),.cert-grid>div:nth-child(3n+2){transition-delay:.12s}.case-card:nth-child(3),.dashboard-card:nth-child(3),.cert-grid>div:nth-child(3n){transition-delay:.22s}
+@media(max-width:760px){.education-two{grid-template-columns:1fr!important}.sshot-title{font-size:56px!important}.section-head h2{font-size:50px!important}.sshot-hero{padding-top:48px!important}}
+</style><style id="final-user-redesign">
+/* FINAL REDESIGN — clean lavender, no dotted pattern */
+body, section, section.tone-a, section.tone-b, #about, #education, #internships, #skills, #projects, #dashboards, #certificates, #organizing, #roles, #contact {
+  background-image:none !important;
+}
+body::before, body::after, section::before, section::after { background-image:none !important; }
+[class*="dot"], [class*="pattern"] { background-image:none !important; }
+
+:root{--lavender:#7c62aa;--lavender-dark:#4b376b;--lavender-mid:#b8a5d8;--lavender-soft:#eee9f7;--lavender-pale:#faf8fd;--ink:#29243a;}
+section{border-top:1px solid rgba(85,62,120,.10)}
+#about{background:#fbf9fd!important}
+#internships{background:#e8ddf4!important}
+#education{background:#f7f3fb!important}
+#skills{background:#ded1ed!important}
+#projects{background:#faf8fd!important}
+#dashboards{background:#d8c7e9!important}
+#certificates{background:#f7f3fb!important}
+
+/* Custom heading system — distinct from reference */
+.about-title,.section-head h2,.sshot-title{
+  font-family:var(--serif); color:var(--ink); letter-spacing:-.055em; line-height:.94;
+  text-wrap:balance;
+}
+.about-title{font-size:clamp(48px,7vw,82px); margin-bottom:28px;}
+.about-title em,.section-head h2 em,.sshot-title .accent{
+  color:var(--lavender); font-style:italic; font-weight:500; position:relative;
+}
+.about-title em::after,.section-head h2 em::after,.sshot-title .accent::after{
+  content:""; display:block; width:38%; min-width:72px; height:5px; margin:10px 0 0; border-radius:99px;
+  background:linear-gradient(90deg,var(--lavender),rgba(124,98,170,.18));
+}
+.section-head h2{font-size:clamp(44px,6vw,74px)!important;}
+.sshot-title{font-size:clamp(48px,6.4vw,78px)!important;}
+.sshot-eyebrow,.index-label .code{color:var(--lavender-dark)!important;letter-spacing:.18em!important;font-weight:600;}
+
+/* About photo collage */
+.about-gallery{position:relative; min-height:470px; width:100%;}
+.about-shot{position:absolute; overflow:hidden; border:1px solid rgba(75,55,107,.18); box-shadow:0 20px 55px rgba(66,47,94,.16); background:#e9e0f3;}
+.about-shot img{width:100%;height:100%;object-fit:cover;}
+.shot-main{width:68%;height:78%;left:5%;top:10%;border-radius:110px 110px 26px 26px;z-index:2;transform:rotate(-3deg)}
+.shot-top{width:39%;height:31%;right:0;top:0;border-radius:22px;z-index:3;transform:rotate(5deg)}
+.shot-bottom{width:43%;height:34%;right:1%;bottom:1%;border-radius:22px;z-index:1;transform:rotate(-5deg)}
+.shot-top img{object-position:center 25%}.shot-bottom img{object-position:center 75%}
+
+/* Internship: one feature card + two compact cards */
+.internship-layout{display:grid;grid-template-columns:1.15fr .85fr;gap:24px;align-items:stretch;}
+.internship-stack{display:grid;grid-template-rows:1fr 1fr;gap:24px;}
+#internships .sshot-card{min-height:0!important;border:1px solid rgba(82,60,117,.14);box-shadow:0 16px 36px rgba(75,55,107,.10);background:rgba(255,255,255,.55)!important;}
+#internships .sshot-card.dark{background:linear-gradient(145deg,#4b376b,#635082)!important;color:#fff;}
+#internships .internship-featured{min-height:620px!important;padding:48px!important;display:flex;flex-direction:column;justify-content:center;}
+#internships .internship-featured h3{font-size:clamp(44px,5vw,68px)!important;max-width:10ch;}
+#internships .internship-featured .sshot-num{font-size:70px!important;}
+#internships .internship-side{min-height:298px!important;padding:30px!important;}
+#internships .internship-side h3{font-size:clamp(28px,3vw,40px)!important;line-height:1!important;}
+#internships .internship-side .sshot-bullets{font-size:14px!important;}
+#internships .sshot-link{margin-top:auto;}
+#internships .sshot-card:nth-child(odd)::after{content:"✦";position:absolute;right:26px;top:22px;font-size:24px;color:var(--lavender);opacity:.8;}
+
+/* Replace any dashed borders left in the page */
+.photo-slot,.cert-slot{border:1px solid rgba(104,80,145,.22)!important;background-image:none!important;}
+.cert-slot{box-shadow:0 12px 28px rgba(66,47,94,.08)}
+
+@media(max-width:860px){
+ .about-grid{grid-template-columns:1fr!important}.about-gallery{min-height:410px;max-width:620px}.internship-layout{grid-template-columns:1fr}.internship-stack{grid-template-columns:1fr 1fr;grid-template-rows:none}.internship-featured{min-height:500px!important}
+}
+@media(max-width:620px){.about-gallery{min-height:360px}.internship-stack{grid-template-columns:1fr}.about-title{font-size:52px}.shot-main{height:75%}}
+</style><style id="latest-user-fix">
+/* Latest user fixes: clean background, Skills directly after Internships, stock-photo collage */
+body, body::before, body::after, section, section::before, section::after,
+#about, #internships, #skills, #education, #projects, #dashboards,
+#certificates, #organizing, #roles, #contact {
+  background-image:none !important;
+}
+.about-gallery{position:relative;min-height:500px;width:100%;overflow:visible;}
+.about-shot{position:absolute;overflow:hidden;background:#e9e0f3;border:8px solid rgba(255,255,255,.78);box-shadow:0 22px 55px rgba(66,47,94,.18)}
+.about-shot img{display:block;width:100%;height:100%;object-fit:cover;}
+.shot-main{width:64%;height:76%;left:4%;top:8%;border-radius:34px;transform:rotate(-4deg);z-index:2}
+.shot-top{width:43%;height:44%;right:1%;top:0;border-radius:28px;transform:rotate(6deg);z-index:3}
+.shot-bottom{width:46%;height:43%;right:4%;bottom:2%;border-radius:28px;transform:rotate(-6deg);z-index:4}
+.about-gallery::after{content:'creative · finance · analytics';position:absolute;left:10%;bottom:-2%;font-family:var(--mono);font-size:10px;letter-spacing:.16em;text-transform:uppercase;color:var(--lavender-dark);background:rgba(255,255,255,.76);padding:9px 13px;border-radius:999px;z-index:6}
+@media(max-width:760px){.about-gallery{min-height:400px}.shot-main{width:68%;height:70%;left:0;top:7%}.shot-top{width:47%;height:38%;right:0}.shot-bottom{width:48%;height:38%;right:2%;bottom:4%}}
+</style>
+<style id="anti-copy-redesign">
+/* Original visual language: remove dotted textures and boxy copied treatment */
+.sshot-card::before,.sshot-card.dark::before{background:none!important;content:none!important;}
+.project-placeholder{border-style:solid!important;}
+/* replace uniform rectangles with asymmetric editorial shapes */
+.sshot-card{border-radius:42px 12px 42px 12px!important;clip-path:polygon(0 0,96% 0,100% 5%,100% 92%,96% 100%,7% 100%,0 95%)!important;border:0!important;box-shadow:18px 18px 0 rgba(109,82,145,.13),0 20px 48px rgba(75,55,107,.10)!important;}
+.sshot-card:nth-child(3n+1){border-radius:54px 10px 10px 54px!important;transform:rotate(-.35deg);}
+.sshot-card:nth-child(3n+2){border-radius:12px 48px 12px 48px!important;transform:rotate(.35deg);}
+.sshot-card:nth-child(3n+3){border-radius:48px 12px 54px 12px!important;}
+.sshot-card:hover{transform:translateY(-8px) rotate(0)!important;box-shadow:22px 22px 0 rgba(109,82,145,.18),0 28px 58px rgba(75,55,107,.16)!important;}
+/* decorative alternatives instead of dots */
+.sshot-card::after{content:"✦";position:absolute;right:28px;top:26px;font-size:38px;line-height:1;color:rgba(116,84,158,.28);font-family:var(--serif);z-index:0;}
+.sshot-card.dark::after{color:rgba(255,255,255,.18);}
+/* soften all remaining obvious box outlines */
+.case-card,.dashboard-card,.cert-slot{border-radius:28px 8px 28px 8px!important;border:0!important;}
+.skill-chip{border-radius:999px!important;border-style:solid!important;}
+.project-link{border-radius:999px!important;}
+</style>
+
+<style id="interactive-unique-upgrade">
+/* Interactive upgrade — original lavender treatment */
+.hero{overflow:hidden}.hero-text{position:relative}.hero-mini-stats{display:flex;gap:20px;margin-top:32px;flex-wrap:wrap}.hero-mini-stats div{min-width:104px;padding:10px 0;border-top:2px solid rgba(74,53,104,.32)}.hero-mini-stats b{display:block;font-family:var(--serif);font-size:18px;color:#5c4383}.hero-mini-stats span{font-size:10px;text-transform:uppercase;letter-spacing:.08em;color:var(--text-soft)}
+.hero-extras{position:absolute;right:8%;bottom:8%;pointer-events:none}.hero-note{background:#f7f1fb;border:1px solid rgba(85,61,118,.22);padding:16px 20px;transform:rotate(-4deg);box-shadow:12px 12px 0 rgba(111,78,149,.13);border-radius:28px 9px 25px 8px}.hero-note span{display:block;font:9px var(--mono);letter-spacing:.12em;color:#7b6498;margin-bottom:7px}.hero-note strong{font-family:var(--serif);font-size:22px;line-height:1;color:#4d396b}.hero-orbit{position:absolute;font-size:32px;color:#8d72b2;animation:floaty 5s ease-in-out infinite}.orbit-a{right:-34px;top:-50px}.orbit-b{left:-45px;bottom:-36px;font-size:24px;animation-delay:-2s}@keyframes floaty{50%{transform:translateY(-10px) rotate(18deg)}}
+.dashboard-card,.cert-slot,.project-card,.case-card,.sshot-card{cursor:pointer}.dashboard-card::after{content:'Click to expand ↗';display:block;margin-top:10px;font:10px var(--mono);letter-spacing:.08em;color:#6e538f}.cert-slot{position:relative}.cert-slot::after{content:'OPEN ↗';position:absolute;right:12px;bottom:10px;background:#5d4380;color:#fff;padding:6px 9px;border-radius:999px;font:9px var(--mono);letter-spacing:.08em;opacity:0;transition:.25s}.cert-slot:hover::after{opacity:1}.interactive-modal{position:fixed;inset:0;background:rgba(28,20,40,.62);backdrop-filter:blur(8px);z-index:9999;display:none;align-items:center;justify-content:center;padding:24px}.interactive-modal.open{display:flex}.interactive-modal-box{width:min(980px,94vw);max-height:90vh;background:#faf8fd;border-radius:30px 12px 30px 12px;padding:20px;position:relative;box-shadow:0 28px 90px rgba(0,0,0,.35);overflow:auto}.interactive-modal-box img{width:100%;max-height:78vh;object-fit:contain;display:block;border-radius:16px}.interactive-modal-close{position:absolute;right:18px;top:14px;width:38px;height:38px;border:0;border-radius:50%;background:#5d4380;color:#fff;font-size:22px;cursor:pointer;z-index:2}.modal-copy{padding:30px 14px}.modal-copy h3{font-family:var(--serif);font-size:38px;margin:0 0 12px;color:#4d396b}.modal-copy p{color:#665777;line-height:1.7}.modal-action{display:inline-block;margin-top:16px;padding:12px 18px;border-radius:999px;background:#5d4380;color:#fff;text-decoration:none;font:11px var(--mono);letter-spacing:.08em}
+@media(max-width:800px){.hero-extras{display:none}.hero-mini-stats{margin-bottom:8px}.interactive-modal-box{padding:14px;border-radius:20px 8px 20px 8px}.modal-copy h3{font-size:28px}}
+</style>
+<style id="latest-visual-fix">
+/* Final visual fixes */
+/* Remove the Scroll Down item from the first page */
+.hero-mini-stats > div:last-child{display:none!important;}
+/* Make the Social Media internship card lighter */
+#internships .internship-stack .internship-side:first-child{background:linear-gradient(145deg,#f7f1fb 0%,#e8dcf4 100%)!important;color:#3d2d50!important;}
+#internships .internship-stack .internship-side:first-child .sshot-date,#internships .internship-stack .internship-side:first-child .sshot-org,#internships .internship-stack .internship-side:first-child .sshot-bullets,#internships .internship-stack .internship-side:first-child .sshot-link{color:#624b7a!important;}
+#internships .internship-stack .internship-side:first-child .sshot-link{background:rgba(255,255,255,.72)!important;border-color:rgba(98,75,122,.2)!important;}
+/* Straight framed certificates — no tilt */
+.cert-grid{gap:28px!important;}
+.cert-slot{aspect-ratio:auto!important;height:340px!important;padding:12px!important;border:12px solid #fff!important;border-radius:4px!important;background:#eee7f5!important;box-shadow:0 12px 30px rgba(75,55,107,.14)!important;transform:none!important;}
+.cert-slot:hover{transform:translateY(-4px)!important;}
+.cert-slot img{position:static!important;width:100%!important;height:100%!important;object-fit:contain!important;padding:0!important;background:#fff!important;border-radius:0!important;}
+.cert-grid>div,.cert-grid .reveal-card{transform:none!important;rotate:0deg!important;}
+</style>
+
+<style id="isha-open-editorial-education-internships">
+/* Isha's open-editorial redesign — no solid rectangular cards */
+#education .sshot-grid,
+#internships .internship-layout,
+#internships .internship-stack{
+  position:relative;
+}
+
+/* EDUCATION — open timeline / floating editorial panels */
+#education .sshot-grid{
+  grid-template-columns:repeat(2,minmax(0,1fr))!important;
+  gap:clamp(42px,7vw,110px)!important;
+  padding:28px 18px 20px!important;
+}
+#education .sshot-grid::before{
+  content:"";
+  position:absolute;
+  left:8%;
+  right:8%;
+  top:72px;
+  height:1px;
+  background:linear-gradient(90deg,transparent,rgba(75,55,107,.28),rgba(75,55,107,.28),transparent);
+}
+#education .sshot-card{
+  min-height:390px!important;
+  padding:42px 10px 54px!important;
+  background:transparent!important;
+  border:0!important;
+  box-shadow:none!important;
+  clip-path:none!important;
+  border-radius:0!important;
+  transform:none!important;
+  overflow:visible!important;
+}
+#education .sshot-card::after{
+  content:"";
+  position:absolute;
+  left:0;
+  right:12%;
+  bottom:0;
+  height:2px;
+  background:linear-gradient(90deg,var(--lavender),rgba(124,98,170,.12));
+  border-radius:99px;
+  top:auto;
+  opacity:1;
+}
+#education .sshot-card::before{content:none!important}
+#education .sshot-card:nth-child(2){
+  padding-top:78px!important;
+}
+#education .sshot-num{
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  width:74px;
+  height:74px;
+  border-radius:50%;
+  background:var(--lavender-dark)!important;
+  color:#fff!important;
+  font-family:var(--serif);
+  font-size:27px!important;
+  margin-bottom:34px;
+  box-shadow:10px 10px 0 rgba(124,98,170,.12);
+}
+#education .sshot-card:nth-child(2) .sshot-num{
+  background:var(--lavender)!important;
+  box-shadow:-10px 10px 0 rgba(124,98,170,.12);
+}
+#education .sshot-date{
+  margin-bottom:12px!important;
+  font-size:11px!important;
+  letter-spacing:.16em!important;
+}
+#education .sshot-card h3{
+  font-size:clamp(38px,4.5vw,58px)!important;
+  line-height:.95!important;
+  margin-bottom:12px!important;
+}
+#education .sshot-org{
+  font-size:17px!important;
+  margin-bottom:25px!important;
+}
+#education .sshot-bullets{
+  font-size:15px!important;
+  max-width:42ch;
+}
+#education .sshot-badge{
+  margin-top:30px!important;
+  background:transparent!important;
+  border:1px solid rgba(75,55,107,.28)!important;
+  border-radius:999px!important;
+  padding:9px 15px!important;
+}
+#education .sshot-arrow{
+  right:0!important;
+  bottom:18px!important;
+  font-size:40px!important;
+}
+
+/* INTERNSHIPS — asymmetrical editorial composition, no card boxes */
+#internships .internship-layout{
+  grid-template-columns:1.15fr .85fr!important;
+  gap:clamp(35px,6vw,90px)!important;
+  align-items:stretch!important;
+  padding:15px 18px 0!important;
+}
+#internships .internship-stack{
+  gap:0!important;
+}
+#internships .sshot-card,
+#internships .internship-featured,
+#internships .internship-side{
+  background:transparent!important;
+  border:0!important;
+  box-shadow:none!important;
+  clip-path:none!important;
+  border-radius:0!important;
+  transform:none!important;
+  overflow:visible!important;
+}
+#internships .internship-featured{
+  min-height:560px!important;
+  padding:38px 70px 55px 0!important;
+  border-right:1px solid rgba(75,55,107,.20)!important;
+  position:relative;
+}
+#internships .internship-featured::before{
+  content:"";
+  position:absolute;
+  width:230px;
+  height:230px;
+  border:1px solid rgba(124,98,170,.32);
+  border-radius:50%;
+  right:-115px;
+  top:42px;
+  z-index:-1;
+}
+#internships .internship-featured::after{
+  content:"✦";
+  position:absolute;
+  right:-10px;
+  top:22px;
+  transform:translateX(50%);
+  width:20px;
+  height:20px;
+  background:#e8ddf4;
+  color:var(--lavender-dark);
+  text-align:center;
+  line-height:20px;
+  font-size:15px;
+}
+#internships .internship-featured .sshot-num{
+  font-size:86px!important;
+  color:var(--lavender)!important;
+  line-height:.8!important;
+  margin-bottom:30px!important;
+}
+#internships .internship-featured .sshot-date{
+  margin-bottom:14px!important;
+}
+#internships .internship-featured h3{
+  font-size:clamp(42px,5vw,70px)!important;
+  color:var(--ink)!important;
+  max-width:9ch;
+  line-height:.9!important;
+}
+#internships .internship-featured .sshot-org{
+  color:#765d9b!important;
+  font-size:18px!important;
+}
+#internships .internship-featured .sshot-bullets{
+  color:#5f566a!important;
+  max-width:46ch;
+}
+#internships .internship-featured .sshot-link{
+  background:transparent!important;
+  border:0!important;
+  border-bottom:1px solid rgba(75,55,107,.3)!important;
+  border-radius:0!important;
+  padding:9px 0!important;
+}
+
+/* Right-side experiences become two floating entries with curved underlines */
+#internships .internship-stack{
+  display:flex!important;
+  flex-direction:column!important;
+  justify-content:space-around;
+}
+#internships .internship-side{
+  min-height:245px!important;
+  padding:30px 0 38px!important;
+  position:relative;
+}
+#internships .internship-side + .internship-side{
+  border-top:1px solid rgba(75,55,107,.18)!important;
+  padding-top:44px!important;
+}
+#internships .internship-side::after{
+  content:"";
+  position:absolute;
+  left:0;
+  bottom:0;
+  width:75%;
+  height:1px;
+  background:linear-gradient(90deg,var(--lavender),transparent);
+}
+#internships .internship-side .sshot-num{
+  width:52px;
+  height:52px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  border-radius:50%;
+  background:rgba(124,98,170,.12)!important;
+  color:var(--lavender-dark)!important;
+  font-size:20px!important;
+  margin-bottom:22px;
+}
+#internships .internship-side h3{
+  color:var(--ink)!important;
+  font-size:clamp(30px,3.2vw,44px)!important;
+  line-height:.95!important;
+  margin-bottom:8px!important;
+}
+#internships .internship-side .sshot-org,
+#internships .internship-side .sshot-bullets{
+  color:#62586d!important;
+}
+#internships .internship-side .sshot-badge{
+  background:transparent!important;
+  border:0!important;
+  padding:8px 0!important;
+}
+#internships .internship-side .sshot-link{
+  border:0!important;
+  border-bottom:1px solid rgba(75,55,107,.25)!important;
+  border-radius:0!important;
+  padding:7px 0!important;
+}
+
+/* remove hover movement that made the open layout jump */
+#education .sshot-card:hover,
+#internships .sshot-card:hover{
+  transform:none!important;
+  box-shadow:none!important;
+}
+
+@media(max-width:760px){
+  #education .sshot-grid{grid-template-columns:1fr!important;padding:10px 0!important}
+  #education .sshot-grid::before{display:none}
+  #education .sshot-card,
+  #education .sshot-card:nth-child(2){padding:35px 0 45px!important}
+  #education .sshot-card:nth-child(2){border-top:1px solid rgba(75,55,107,.18)!important}
+  #internships .internship-layout{grid-template-columns:1fr!important;padding:0!important}
+  #internships .internship-featured{border-right:0!important;border-bottom:1px solid rgba(75,55,107,.20)!important;padding:35px 0 55px!important}
+  #internships .internship-featured::before,
+  #internships .internship-featured::after{display:none}
+  #internships .internship-stack{display:block!important}
+  #internships .internship-side{padding:35px 0!important}
+}
+</style>
+
+</head>
+<body>
+<div class="orb orb-1"></div>
+<div class="orb orb-2"></div>
+<header class="nav">
+<div class="nav-inner">
+<div class="nav-mark">
+<span class="nav-name">Isha Verma</span>
+<span aria-hidden="true" class="nav-divider"></span>
+<span class="nav-role">Finance &amp; Marketing</span>
+</div>
+<ul class="nav-links hero-nav">
+<li><a href="#home">HOME</a></li><li><a href="#about">ABOUT</a></li><li><a href="#projects">PROJECTS</a></li><li><a href="#dashboards">REPORTS</a></li><li><a href="#contact">CONTACT</a></li>
+</ul><a class="nav-resume" download="Isha-Verma-Resume.pdf" href="isha_assets/asset_1.pdf">↧   RESUME</a>
+</div>
+</header>
+<section class="hero clean-section" id="home">
+<div class="wrap">
+<div class="hero-grid">
+<div class="hero-text"><div aria-hidden="true" class="hero-rail"></div><h1>Hi, I’m<br/><em>Isha Verma.</em></h1><p class="hero-subtitle">MBA (Business Analytics) Student<br/>with a passion for <span>Finance &amp; Marketing.</span></p><div class="hero-actions"><a class="btn btn-solid" href="#projects">VIEW PROJECTS  ↗</a><a class="btn btn-ghost" href="#contact">CONTACT ME  ✉</a></div><div class="hero-mini-stats"><div><b>03+</b><span>Internships</span></div><div><b>15+</b><span>Events</span></div><div><b>Scroll ↓</b><span>Discover more</span></div></div></div>
+<div class="hero-extras" aria-hidden="true">
+  <div class="hero-orbit orbit-a">✦</div><div class="hero-orbit orbit-b">✿</div>
+  <div class="hero-note"><span>PORTFOLIO · 2026</span><strong>01 — Explore<br/>my journey</strong></div>
+</div>
+<!-- PHOTO: replace src below with your real photo file, e.g. assets/profile-photo.jpg -->
+<div class="hero-photo">
+<img alt="Isha Verma" onerror="this.style.display='none'; this.parentElement.querySelector('.placeholder-text').style.display='block';" src="isha_assets/asset_2.jpg"/>
+<div class="placeholder-text">PHOTO<br/>place file at<br/><strong>assets/profile-photo.jpg</strong><br/>(4:5 portrait works best)</div>
+</div>
+</div>
+</div>
+</section>
+<section class="tone-b clean-section" id="about">
+<div class="wrap">
+<div class="index-label"><span class="code">ABT·01</span><span class="line"></span></div>
+<div class="about-grid" style="grid-template-columns:1.08fr .92fr;">
+<div class="about-text"><h2 class="about-title">A little <em>more about me.</em></h2>
+<!-- EDIT: 2–3 short paragraphs about you -->
+<p><strong>Hey! I’m Isha.</strong> I’m someone who loves being creative, trying new things, and learning along the way. I enjoy working on things that let me use my creativity and turn simple ideas into something that actually looks and feels good.</p>
+<p>I’m still exploring what I’m best at, but I genuinely enjoy the process of learning, experimenting, and improving myself with every project I work on.</p>
+<p>For me, it’s not about being perfect. I just like creating things that feel like me and getting a little better at what I do every day.</p>
+</div>
+<div aria-label="Lavender creative workspace photo collage" class="about-gallery reveal"><div class="about-shot shot-main"><img alt="Lavender floral workspace with keyboard and stationery" loading="lazy" src="https://images.pexels.com/photos/37294451/pexels-photo-37294451.jpeg?auto=compress&amp;cs=tinysrgb&amp;w=1200"/></div><div class="about-shot shot-top"><img alt="Minimal lavender stationery workspace" loading="lazy" src="https://images.pexels.com/photos/35242571/pexels-photo-35242571.jpeg?auto=compress&amp;cs=tinysrgb&amp;w=900"/></div><div class="about-shot shot-bottom"><img alt="Elegant workspace with lilacs and keyboard" loading="lazy" src="https://images.pexels.com/photos/37294850/pexels-photo-37294850.jpeg?auto=compress&amp;cs=tinysrgb&amp;w=900"/></div></div></div>
+</div>
+</section><section class="clean-section" id="internships"><div class="wrap"><div class="sshot-hero"><div><div class="sshot-eyebrow">02 / INTERNSHIPS</div><h2 class="sshot-title">Learning <span class="accent">by doing.</span></h2></div><div class="sshot-copy">Real-world work that helped me connect <strong>finance, analysis and creative execution</strong> beyond the classroom.</div></div><div class="internship-layout"><article class="sshot-card dark internship-featured reveal-card"><div class="sshot-num">01</div><div class="sshot-date">Jun 2026 — Aug 2026</div><h3>Finance &amp; Accounts Intern</h3><div class="sshot-org">Verma &amp; Associates</div><ul class="sshot-bullets"><li>Supported financial documentation and GST compliance</li><li>Created and maintained Excel-based MIS reporting</li></ul><a class="sshot-link" href="isha_assets/asset_3.pdf" target="_blank">View Offer &amp; Completion Letter ↗</a><span class="sshot-arrow">↗</span></article><div class="internship-stack"><article class="sshot-card internship-side reveal-card"><div class="sshot-num">02</div><div class="sshot-date">Jun 2026 — Jul 2026</div><h3>Social Media Marketing Intern</h3><div class="sshot-org">InAmigos Foundation</div><ul class="sshot-bullets"><li>Designed posters and social-media creatives for awareness campaigns</li><li>Created reels and maintained consistent visual branding</li></ul><a class="sshot-link" href="isha_assets/asset_4.jpg" target="_blank">View Certificate ↗</a><span class="sshot-arrow">↗</span></article><article class="sshot-card dark internship-side reveal-card"><div class="sshot-num">03</div><div class="sshot-date">Jun 2024 — Aug 2024</div><h3>Finance &amp; Accounting Intern</h3><div class="sshot-org">V.S. Electronics Co.</div><ul class="sshot-bullets"><li>Maintained financial records and tracked invoices</li><li>Assisted in preparing organised, audit-ready reports</li></ul><span class="sshot-arrow">↗</span></article></div></div></div></section><section class="tone-a clean-section" id="skills">
+<div class="wrap">
+<div class="index-label"><span class="code">SKL·03</span><span class="line"></span></div>
+<div class="section-head">
+<h2><em>Skills</em></h2>
+<div class="section-tag">From coursework &amp; internship</div>
+</div>
+<div class="skills-cols">
+<div class="skills-left">
+<h3>Technical Skills</h3>
+<!-- EDIT: add/remove skill-chip spans as needed -->
+<div class="skill-chip-row">
+<span class="skill-chip">MS Excel (Pivot Tables, Data Cleaning, Analysis)</span>
+<span class="skill-chip">Power BI (Data Visualization)</span>
+<span class="skill-chip">SPSS (Statistical Analysis)</span>
+<span class="skill-chip">Data Cleaning &amp; Interpretation</span>
+<span class="skill-chip">MySQL (Basic)</span>
+<span class="skill-chip">Python (Basic)</span>
+<span class="skill-chip">MS Office (Excel, PowerPoint, Word)</span>
+</div>
+</div>
+<div class="skills-right">
+<h3>Soft Skills</h3>
+<div class="skill-chip-row">
+<span class="skill-chip">Analytical &amp; Critical Thinking</span>
+<span class="skill-chip">Communication</span>
+<span class="skill-chip">Team Collaboration</span>
+<span class="skill-chip">Attention to Detail</span>
+<span class="skill-chip">Interpersonal Skills</span>
+</div>
+</div>
+</div>
+</div>
+</section>
+<section class="clean-section" id="education"><div class="wrap"><div class="sshot-hero"><div><div class="sshot-eyebrow">04 / EDUCATION</div><h2 class="sshot-title">Where I built my <span class="accent">foundation.</span></h2></div><div class="sshot-copy">Two chapters that shaped me — <strong>school gave me my foundation, while college helped me discover finance, marketing and analytics.</strong></div></div><div class="sshot-grid education-two"><article class="sshot-card dark reveal-card"><div class="sshot-num">01</div><div class="sshot-date">College Journey</div><h3>College</h3><div class="sshot-org">Manav Rachna University, Faridabad</div><ul class="sshot-bullets"><li>MBA in Business Analytics — Finance &amp; Marketing specialization</li><li>BBA in Finance &amp; Accounting</li></ul><div class="sshot-badge">CGPA · 8.83 / 8.96</div><span class="sshot-arrow">↗</span></article><article class="sshot-card reveal-card"><div class="sshot-num">02</div><div class="sshot-date">School Journey</div><h3>School</h3><div class="sshot-org">Grand Columbus International School · St. Peter’s School</div><ul class="sshot-bullets"><li>Senior Secondary — Class XII</li><li>Secondary Education — Class X</li></ul><div class="sshot-badge">82.7% · 87.4%</div><span class="sshot-arrow">↗</span></article></div></div></section>
+
+<section class="tone-b clean-section" id="projects"><div class="wrap"><div class="index-label"><span class="code">PRJ·05</span><span class="line"></span></div><div class="section-head"><h2>Work I am <em>proud to show.</em></h2><div class="section-tag">Selected work</div><div class="project-type-links"><a href="isha_assets/asset_5.pdf" rel="noopener" target="_blank">Report</a><a href="#research-paper">Research Paper</a><a href="#live-project">Live Project</a></div></div><div class="case-grid"><div class="case-card"><span class="case-tag">RESEARCH REPORT</span><h3>The Hidden Challenges of High Ethanol Blending</h3><p>Survey-based research on public awareness, perceptions, and adoption challenges of ethanol-blended fuels in India. Co-authored with Kashish.</p><div class="case-meta"><span class="chip">Research</span><span class="chip">Sustainability</span></div><div class="project-links"><a class="project-link primary" data-project="1" href="#">View Project →</a></div></div><div class="case-card"><span class="case-tag">AI/ML PROJECT</span><h3>Social Media Addiction Level</h3><p>A group project applying AI/ML techniques to study and predict social media addiction levels using usage patterns and behavioural data.</p><div class="case-meta"><span class="chip">AI/ML</span><span class="chip">Group Project</span></div><div class="project-links"><a class="project-link primary" data-project="2" href="#">View Project →</a></div></div><div class="case-card" id="research-paper"><span class="case-tag">RESEARCH / CONFERENCE</span><h3>AI &amp; New Age Technology — AINAT 2025</h3><p>International Conference participation at Manav Rachna University on AI &amp; New Age Technology, held on 28 February–1 March 2025.</p><div class="case-meta"><span class="chip">Research</span><span class="chip">AINAT 2025</span></div><div class="project-links"><a class="project-link primary" data-project="3" href="#">View Certificate →</a></div></div><div class="case-card" id="live-project"><span class="case-tag">LIVE PROJECT · HRM</span><h3>Human Resource Management Project — Goodflame Company</h3><p>Team project studying HR practices, analysing existing HR processes, identifying key challenges, and proposing solutions to improve organisational efficiency and employee management.</p><div class="case-meta"><span class="chip">HRM</span><span class="chip">Live Project</span></div><div class="project-links"><a class="project-link primary" data-project="4" href="#">View Project Letter →</a></div></div></div></div></section><section class="tone-a clean-section" id="dashboards"><div class="wrap"><div class="index-label"><span class="code">DB·06</span><span class="line"></span></div><div class="section-head"><h2>Data, turned into <em>clear stories.</em></h2><div class="section-tag">Analytics work</div></div><div class="dashboard-grid"><div class="dashboard-card">
+<img alt="Zevo Clothing Marketing Analytics Dashboard" class="dashboard-image" src="isha_assets/asset_6.jpg"/>
+<span class="case-tag">EXCEL PROJECT</span>
+<h3>Marketing Analytics Dashboard — Zevo Clothing</h3>
+<p>Built an Excel-based Marketing Analytics Dashboard for a fictional D2C fashion
+      brand, Zevo Clothing, with Kashish Pahuja. Tracked CTR, conversion rate, customer
+      acquisition cost (CAC), and ROI across channels. Email marketing delivered the
+      highest ROI at the lowest CAC, while paid ads had the highest spend but lowest
+      return, and loyalty rewards proved the most effective campaign for retention.</p>
+<div class="case-meta">
+<span class="chip">Excel</span>
+<span class="chip">Pivot Tables &amp; Charts</span>
+<span class="chip">Marketing Analytics</span>
+</div>
+</div><div class="dashboard-card">
+<img alt="HR Analytics Dashboard" class="dashboard-image" src="isha_assets/asset_7.jpg"/>
+<span class="case-tag">DASHBOARD</span>
+<h3>HR Analytics Dashboard</h3>
+<p>Analysed employee attrition trends across departments, age groups, and job
+      satisfaction levels, breaking down attrition rate by gender and education field
+      to surface patterns useful for retention strategy.</p>
+<div class="case-meta">
+<span class="chip">HR Analytics</span>
+<span class="chip">Dashboard</span>
+</div>
+</div><div class="dashboard-card"><img alt="Sales &amp; Regional Performance Dashboard" class="dashboard-image" src="isha_assets/asset_8.jpg"/><span class="case-tag">SALES DASHBOARD</span><h3>Sales &amp; Regional Performance Dashboard</h3><p>Interactive Excel dashboard created to present key performance metrics and trends in a clear, decision-friendly visual format.</p><div class="case-meta"><span class="chip">Excel Dashboard</span></div></div><div class="dashboard-card"><img alt="Employee Productivity Tracker" class="dashboard-image" src="isha_assets/asset_9.jpg"/><span class="case-tag">PRODUCTIVITY DASHBOARD</span><h3>Employee Productivity Tracker</h3><p>Interactive Excel dashboard created to present key performance metrics and trends in a clear, decision-friendly visual format.</p><div class="case-meta"><span class="chip">Excel Dashboard</span></div></div></div></div></section>
+<section class="tone-a clean-section" id="certificates">
+<div class="wrap">
+<div class="index-label"><span class="code">CRT·06</span><span class="line"></span></div>
+<div class="section-head">
+<h2>Things I have <em>learned along the way.</em></h2>
+<div class="section-tag">Verified credentials</div>
+</div>
+<!-- EDIT: duplicate a .cert-slot block for each certificate. Replace src with your real scan/photo -->
+<div class="cert-grid">
+<div>
+<div class="cert-slot">
+<img alt="Investment Management Job Simulation certificate" src="isha_assets/asset_10.jpg"/>
+</div>
+<div class="cert-caption">Investment Management Job Simulation — Fidelity International (Forage), 2026</div>
+</div>
+<div>
+<div class="cert-slot">
+<img alt="Data Analytics Job Simulation certificate" src="isha_assets/asset_11.jpg"/>
+</div>
+<div class="cert-caption">Data Analytics Job Simulation — Deloitte (Forage), 2026</div>
+</div>
+<div>
+<div class="cert-slot">
+<img alt="NISM Kona Kona Shiksha Financial Literacy certificate" src="isha_assets/asset_12.jpg"/>
+</div>
+<div class="cert-caption">Certificate of Excellence — Kona Kona Shiksha Financial Literacy Program, Kotak Securities Ltd. &amp; NISM, Sep 2025 (93% score)</div>
+</div>
+<div>
+<div class="cert-slot">
+<img alt="Mitsubishi Electric SCADA certificate" src="isha_assets/asset_13.jpg"/>
+</div>
+<div class="cert-caption">SCADA (MC Works64) — Mitsubishi Electric Factory Automation, CVR College of Engineering, Jan 2026</div>
+</div>
+<div>
+<div class="cert-slot">
+<img alt="Basics of Python 2026 certificate" src="isha_assets/asset_14.jpg"/>
+</div>
+<div class="cert-caption">Basics of Python 2026 — 3-Day Hands-on Workshop, Manav Rachna International Institute of Research and Studies</div>
+</div>
+<div>
+<div class="cert-slot">
+<img alt="EY Technology Risk Virtual Job Simulation certificate" src="isha_assets/asset_15.jpg"/>
+</div>
+<div class="cert-caption">EY Technology Risk Virtual Job Simulation — Forage, Aug 2026</div>
+</div>
+</div>
+</div>
+</section>
+<section class="tone-b clean-section" id="organizing">
+<div class="wrap">
+<div class="index-label"><span class="code">ORG·07</span><span class="line"></span></div>
+<div class="section-head">
+<h2>Organizing &amp; <em>Leadership</em></h2>
+<div class="section-tag">Events &amp; committee work</div>
+</div>
+<div class="stat-row">
+<div>
+<div class="stat-num">15+</div>
+<div class="stat-label">EVENTS ORGANIZED</div>
+</div>
+</div>
+<p style="color:var(--text-soft); font-size:16px; max-width:60ch; margin-bottom:36px;">
+      Isha has organised 15+ events. Beyond coursework, I've organized and led college fests, workshops, and committee
+      events — from planning logistics to managing teams on the ground.
+    </p>
+<div style="height:8px;"></div>
+<!-- EDIT: duplicate a .cert-slot block for each organizing certificate. Add as many as you need. -->
+<div class="cert-grid">
+<div>
+<div class="cert-slot">
+<img alt="CaseCraft 2K26 — Certificate of Appreciation (Volunteer), School of Business, Manav Rachna University, Apr 2026" onerror="this.style.display='none'; this.parentElement.querySelector('.placeholder-text').style.display='block';" src="isha_assets/asset_16.jpg"/>
+<div class="placeholder-text">Add file at<br/><strong>assets/organizing-1.jpg</strong></div>
+</div>
+<div class="cert-caption">CaseCraft 2K26 — Certificate of Appreciation (Volunteer), School of Business, Manav Rachna University, Apr 2026</div>
+</div>
+<div>
+<div class="cert-slot">
+<img alt="3rd Management Development Program — Stress Management for Personal &amp; Professional Effectiveness, School of Management &amp; Commerce, MRU, 2025" onerror="this.style.display='none'; this.parentElement.querySelector('.placeholder-text').style.display='block';" src="isha_assets/asset_17.jpg"/>
+<div class="placeholder-text">Add file at<br/><strong>assets/organizing-2.jpg</strong></div>
+</div>
+<div class="cert-caption">3rd Management Development Program — Stress Management for Personal &amp; Professional Effectiveness, School of Management &amp; Commerce, MRU, 2025</div>
+</div>
+<div>
+<div class="cert-slot">
+<img alt="Start-up Conclave — Key Note Session &amp; Panel Discussion, Innovation &amp; Entrepreneurship Club (MRU-IIC), 2022" onerror="this.style.display='none'; this.parentElement.querySelector('.placeholder-text').style.display='block';" src="isha_assets/asset_18.jpg"/>
+<div class="placeholder-text">Add file at<br/><strong>assets/organizing-3.jpg</strong></div>
+</div>
+<div class="cert-caption">Start-up Conclave — Key Note Session &amp; Panel Discussion, Innovation &amp; Entrepreneurship Club (MRU-IIC), 2022</div>
+</div>
+<div>
+<div class="cert-slot">
+<img alt="6th MDP — Managerial Decision Making, Student Organiser, School of Business, MRU, 2025" onerror="this.style.display='none'; this.parentElement.querySelector('.placeholder-text').style.display='block';" src="isha_assets/asset_19.jpg"/>
+<div class="placeholder-text">Add file at<br/><strong>assets/organizing-4.jpg</strong></div>
+</div>
+<div class="cert-caption">6th MDP — Managerial Decision Making, Student Organiser, School of Business, MRU, 2025</div>
+</div>
+<div>
+<div class="cert-slot">
+<img alt="Effective Sales &amp; Marketing Strategies for Entrepreneurs/Start-ups Workshop — Student Volunteer, IIC MRU, Feb 2026" onerror="this.style.display='none'; this.parentElement.querySelector('.placeholder-text').style.display='block';" src="isha_assets/asset_20.jpg"/>
+<div class="placeholder-text">Add file at<br/><strong>assets/organizing-5.jpg</strong></div>
+</div>
+<div class="cert-caption">Effective Sales &amp; Marketing Strategies for Entrepreneurs/Start-ups Workshop — Student Volunteer, IIC MRU, Feb 2026</div>
+</div>
+<div>
+<div class="cert-slot">
+<img alt="Startup Pitch Competition — Student Volunteer, National Startup Day, IIC MRU, Jan 2026" onerror="this.style.display='none'; this.parentElement.querySelector('.placeholder-text').style.display='block';" src="isha_assets/asset_21.jpg"/>
+<div class="placeholder-text">Add file at<br/><strong>assets/organizing-6.jpg</strong></div>
+</div>
+<div class="cert-caption">Startup Pitch Competition — Student Volunteer, National Startup Day, IIC MRU, Jan 2026</div>
+</div>
+</div>
+</div>
+</section>
+<section class="tone-a clean-section" id="roles">
+<div class="wrap">
+<div class="index-label"><span class="code">ROL·08</span><span class="line"></span></div>
+<div class="section-head">
+<h2>Roles &amp; <em>Recognition</em></h2>
+<div class="section-tag">Positions held &amp; badges</div>
+</div>
+<!-- EDIT: duplicate a .ledger-row block for each role/recognition -->
+<div class="ledger-row">
+<div class="ledger-year">Current</div>
+<div class="ledger-main">
+<h3>Digital Ambassador</h3>
+<p>School of Business (SOB), Manav Rachna University</p>
+</div>
+<div class="ledger-note"></div>
+</div>
+<div class="ledger-row">
+<div class="ledger-year">2025 — 2027</div>
+<div class="ledger-main">
+<h3>Marketing Club Member</h3>
+<p>Manav Rachna University</p>
+</div>
+<div class="ledger-note"></div>
+</div>
+<div class="ledger-row">
+<div class="ledger-year">MBA</div>
+<div class="ledger-main">
+<h3>Golden Badge Holder</h3>
+<p></p>
+</div>
+<div class="ledger-note"></div>
+</div>
+<div class="ledger-row">
+<div class="ledger-year">2022 — 2025</div>
+<div class="ledger-main">
+<h3>Member — I&amp;E (Innovation &amp; Entrepreneurship)</h3>
+<p>Manav Rachna University</p>
+</div>
+<div class="ledger-note"></div>
+</div>
+<div class="ledger-row">
+<div class="ledger-year">2026</div>
+<div class="ledger-main">
+<h3>3rd Prize — Idea Titans 2026</h3>
+<p>Secured 3rd position in Idea Titans, an Inter College Business Plan Competition, for presenting a business idea.</p>
+</div>
+<div class="ledger-note"><a href="isha_assets/asset_22.jpg" rel="noopener" style="color:var(--lavender);text-decoration:none;font-family:var(--mono);font-size:12px;" target="_blank">View Certificate ↗</a></div>
+</div>
+</div>
+</section>
+<section class="contact tone-b clean-section" id="contact">
+<div class="wrap">
+<div class="index-label"><span class="code">CNT·09</span><span class="line"></span></div>
+<div class="contact-inner">
+<h2>Let's talk numbers &amp; <em>narratives.</em></h2>
+<div class="contact-links">
+<!-- EDIT: remove the phone line below if you'd rather not publish it publicly -->
+<a href="mailto:ishavrma20@gmail.com">ishavrma20@gmail.com</a>
+<a href="https://linkedin.com/in/isha-vermaaa" rel="noopener" target="_blank">linkedin.com/in/isha-vermaaa</a>
+<a href="tel:+918375065953">+91 83750 65953</a>
+</div>
+</div>
+</div>
+</section>
+<div class="wrap">
+<footer>
+<span>© 2026 Isha. Built as an academic portfolio.</span>
+<span>Last updated: <!-- EDIT: update date manually or leave as-is -->August 2026</span>
+</footer>
+</div>
+<div aria-hidden="true" class="project-modal" id="project-modal"><div class="project-modal-box"><button aria-label="Close" class="project-modal-close" type="button">×</button><div id="project-modal-content"></div></div></div><script>
+const projectData = [{"tag": "RESEARCH REPORT", "title": "The Hidden Challenges of High Ethanol Blending", "desc": "Survey-based research on public awareness, perceptions, and adoption challenges of ethanol-blended fuels in India. Co-authored with Kashish.", "chips": ["Research", "Sustainability"], "proofType": "link", "proof": "isha_assets/asset_5.pdf"}, {"tag": "AI/ML PROJECT", "title": "Social Media Addiction Level", "desc": "A group project applying AI/ML techniques to study and predict social media addiction levels using usage patterns and behavioural data.", "chips": ["AI/ML", "Group Project"]}, {"tag": "RESEARCH / CONFERENCE", "title": "AI & New Age Technology \u2014 AINAT 2025", "desc": "Certificate of participation for the International Conference on AI & New Age Technology \u2014 AINAT 2025, organized by Manav Rachna University on 28 February\u20131 March 2025.", "chips": ["Research", "AINAT 2025"], "proofType": "image", "proof": "isha_assets/asset_23.jpg"}, {"tag": "LIVE PROJECT \u00b7 HRM", "title": "Human Resource Management Project \u2014 Goodflame Company", "desc": "Team project studying HR practices, analysing existing HR processes, identifying key challenges, and proposing solutions to improve organisational efficiency and employee management.", "chips": ["HRM", "Live Project"], "proofType": "pdf", "proof": "isha_assets/asset_24.pdf"}];
+const projectModal=document.getElementById('project-modal');
+const projectModalContent=document.getElementById('project-modal-content');
+document.querySelectorAll('[data-project]').forEach(btn=>btn.addEventListener('click',e=>{e.preventDefault();const d=projectData[Number(btn.dataset.project)-1];let proof='';if(d.proofType==='image') proof=`<div style="margin-top:18px"><img src="${d.proof}" alt="Certificate" style="width:100%;height:auto;border:1px solid var(--rule);border-radius:8px;display:block"></div>`;else if(d.proofType==='pdf') proof=`<div style="margin-top:18px"><iframe src="${d.proof}" title="Project letter" style="width:100%;height:520px;border:1px solid var(--rule);border-radius:8px;background:#fff"></iframe></div>`;else if(d.proofType==='link') proof=`<div style="margin-top:18px"><a class="project-link primary" href="${d.proof}" target="_blank" rel="noopener">Open Report ↗</a></div>`;projectModalContent.innerHTML=`<span class="case-tag">${d.tag}</span><h3>${d.title}</h3><p>${d.desc}</p><div class="modal-meta">${d.chips.map(c=>`<span class="chip">${c}</span>`).join('')}</div>${proof}`;projectModal.classList.add('open');projectModal.setAttribute('aria-hidden','false');}));
+document.querySelector('.project-modal-close').addEventListener('click',()=>{projectModal.classList.remove('open');projectModal.setAttribute('aria-hidden','true');});
+projectModal.addEventListener('click',e=>{if(e.target===projectModal){projectModal.classList.remove('open');projectModal.setAttribute('aria-hidden','true');}});
+document.addEventListener('keydown',e=>{if(e.key==='Escape')projectModal.classList.remove('open');});
+</script><script>
+document.addEventListener('DOMContentLoaded',()=>{
+ const targets=document.querySelectorAll('.sshot-hero,.section-head,.about-text,.photo-slot,.reveal,.reveal-card,.case-card,.dashboard-card,.cert-grid>div,.meter,.stat-row>div,.contact-inner');
+ targets.forEach(el=>el.classList.add('reveal'));
+ const io=new IntersectionObserver(entries=>entries.forEach(e=>{if(e.isIntersecting){e.target.classList.add('visible');io.unobserve(e.target)}}),{threshold:.12});targets.forEach(el=>io.observe(el));
+ const box=document.createElement('div');box.className='cert-lightbox';box.innerHTML='<div class="cert-lightbox-box"><button aria-label="Close">×</button><img alt="Certificate preview"></div>';document.body.appendChild(box);const preview=box.querySelector('img');
+ document.querySelectorAll('.cert-slot img').forEach(img=>{img.closest('.cert-slot').addEventListener('click',()=>{preview.src=img.src;preview.alt=img.alt||'Certificate';box.classList.add('open')})});
+ box.addEventListener('click',e=>{if(e.target===box||e.target.tagName==='BUTTON'){box.classList.remove('open');preview.src=''}});document.addEventListener('keydown',e=>{if(e.key==='Escape')box.classList.remove('open')});
+});
+</script><div class="interactive-modal" id="interactiveModal" aria-hidden="true"><div class="interactive-modal-box"><button class="interactive-modal-close" aria-label="Close">×</button><div id="interactiveModalContent"></div></div></div>
+<script id="interactive-openers">
+(function(){
+ const modal=document.getElementById('interactiveModal'), content=document.getElementById('interactiveModalContent');
+ const open=(html)=>{content.innerHTML=html;modal.classList.add('open');modal.setAttribute('aria-hidden','false');document.body.style.overflow='hidden'};
+ const close=()=>{modal.classList.remove('open');modal.setAttribute('aria-hidden','true');document.body.style.overflow=''};
+ document.querySelector('.interactive-modal-close').onclick=close; modal.addEventListener('click',e=>{if(e.target===modal)close()});document.addEventListener('keydown',e=>{if(e.key==='Escape')close()});
+ document.querySelectorAll('.cert-slot').forEach(card=>card.addEventListener('click',()=>{const img=card.querySelector('img');if(img&&img.src)open('<img alt="Certificate preview" src="'+img.src+'">')}));
+ document.querySelectorAll('.dashboard-card').forEach(card=>card.addEventListener('click',()=>{const img=card.querySelector('img'); const title=card.querySelector('h3')?.textContent||'Dashboard'; const desc=card.querySelector('p')?.textContent||'Interactive portfolio preview'; open((img&&img.src?'<img alt="'+title+'" src="'+img.src+'">':'')+'<div class="modal-copy"><h3>'+title+'</h3><p>'+desc+'</p></div>')}));
+ document.querySelectorAll('a.project-link[href="#"]').forEach(a=>a.addEventListener('click',e=>{e.preventDefault(); const card=a.closest('.project-card,.case-card,.project-item,.project'); const title=card?.querySelector('h3,h4')?.textContent||a.textContent.trim(); const img=card?.querySelector('img'); const desc=card?.querySelector('p')?.textContent||'This project is part of my portfolio. The preview can be expanded here.'; open((img&&img.src?'<img alt="'+title+'" src="'+img.src+'">':'')+'<div class="modal-copy"><h3>'+title+'</h3><p>'+desc+'</p><a class="modal-action" href="#contact" onclick="document.getElementById(\'interactiveModal\').classList.remove(\'open\');document.body.style.overflow=\'\'">CONTACT ME FOR DETAILS ↗</a></div>')}));
+})();
+</script>
+<style id="college-black-fix">
+#education .sshot-card.dark h3{color:#000!important;}
+#education .sshot-card.dark .sshot-org{color:#4f435c!important;}
+#education .sshot-card.dark .sshot-bullets{color:#51495a!important;}
+#education .sshot-card.dark{background:transparent!important;color:#29243a!important;}
+</style>
+<script id="internship-click-fix">
+document.addEventListener('DOMContentLoaded',()=>{
+ const modal=document.createElement('div'); modal.className='internship-modal-fix';
+ modal.innerHTML='<div class="internship-modal-box"><button class="internship-modal-close" aria-label="Close">×</button><div class="internship-modal-content"></div></div>';
+ document.body.appendChild(modal);
+ const content=modal.querySelector('.internship-modal-content');
+ const items=[...document.querySelectorAll('#internships .internship-featured, #internships .internship-side')];
+ items.forEach(card=>{
+   card.style.cursor='pointer';
+   card.addEventListener('click',e=>{
+     if(e.target.closest('a')) return;
+     const title=card.querySelector('h3')?.textContent||'Internship';
+     const org=card.querySelector('.sshot-org')?.textContent||'';
+     const date=card.querySelector('.sshot-date')?.textContent||'';
+     const bullets=[...card.querySelectorAll('.sshot-bullets li')].map(x=>'<li>'+x.textContent+'</li>').join('');
+     const link=card.querySelector('a')?.getAttribute('href');
+     content.innerHTML='<div class="internship-modal-kicker">'+date+'</div><h3>'+title+'</h3><div class="internship-modal-org">'+org+'</div><ul>'+bullets+'</ul>'+(link?'<a class="internship-modal-action" href="'+link+'" target="_blank" rel="noopener">OPEN CERTIFICATE / LETTER ↗</a>':'<div class="internship-modal-note">Internship details available in the portfolio.</div>');
+     modal.classList.add('open'); document.body.style.overflow='hidden';
+   });
+ });
+ const close=()=>{modal.classList.remove('open');document.body.style.overflow='';};
+ modal.querySelector('.internship-modal-close').addEventListener('click',close);
+ modal.addEventListener('click',e=>{if(e.target===modal) close();});
+ document.addEventListener('keydown',e=>{if(e.key==='Escape') close();});
+});
+</script>
+<style id="internship-modal-fix-css">
+.internship-modal-fix{position:fixed;inset:0;background:rgba(30,22,42,.68);backdrop-filter:blur(8px);z-index:20000;display:none;align-items:center;justify-content:center;padding:24px}.internship-modal-fix.open{display:flex}.internship-modal-box{width:min(720px,94vw);max-height:88vh;overflow:auto;background:#faf8fd;border-radius:26px;padding:42px;position:relative;box-shadow:0 30px 90px rgba(0,0,0,.3)}.internship-modal-close{position:absolute;right:16px;top:14px;border:0;border-radius:50%;width:38px;height:38px;background:#4b376b;color:#fff;font-size:22px;cursor:pointer}.internship-modal-kicker{font:11px var(--mono);letter-spacing:.14em;text-transform:uppercase;color:#7c62aa;margin-bottom:12px}.internship-modal-box h3{font-family:var(--serif);font-size:clamp(34px,5vw,58px);line-height:.95;color:#29243a;margin-bottom:10px}.internship-modal-org{font-size:18px;color:#765d9b;margin-bottom:24px}.internship-modal-box ul{padding-left:20px;color:#5f566a;line-height:1.7}.internship-modal-action{display:inline-block;margin-top:24px;padding:12px 18px;border-radius:999px;background:#4b376b;color:#fff;text-decoration:none;font:11px var(--mono);letter-spacing:.07em}.internship-modal-note{margin-top:24px;color:#6f6379;font:12px var(--mono)}
+</style>
+
+</body>
+</html>
+
